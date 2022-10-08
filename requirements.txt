@@ -1,1 +1,9 @@
-django==4.1.1
+#aca instalamos tambien apps y paquetes fuera de settings.py
+#cada vez que metemos algo aca, pone pip install -r requirements.txt
+
+django==4.1.1 #asi instalamos django en un proyecto eligiendo la version
+
+django-environ==0.9.0
+
+django-tailwind==3.4.0
+

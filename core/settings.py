@@ -1,31 +1,51 @@
-from pathlib import Path
+# contiene info del proyecto
+#aca podemos excribir contraseñas
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+from pathlib import Path
+import os
+import environ 
+
+env = environ.Env()
+environ.Env.read_env()
+
+#Hace referencia a donde se encuentra el directorio de nuestro archivo django
+#Parent permite tener acceso a toda la carpeta del proyecto
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#Proteger secret key, como variable de ambiente
+#Restringe el acceso a nuestro sitio 
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+#Cuando hagamos despliegue, hay que cambiarlo a False. 
+DEBUG = os.environ.get("DEBUG")
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-f06vshz@*sejpdnorwjn(#0svch#518m7s-^y)gzu47x_q54-&'
+#"*" Significa todo, podemos trabajar con cualquier HOST. 
+ALLOWED_HOSTS = ["*"]
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = []
-
-
-# Application definition
-
+#Al agregar nuevas apps, tambien tenemos que migrarlas. 
+# aca creamos las apps, como la logica de un blog, cursos, etc. 
+# son extensiones de nuestra pagina, funcionalidades añadidas
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', #de aca para arriba, vienen por defecto. 
+
+    "core",#Asi instalamos core, le damos acceso a django de los archivos dentro de la carpeta CORE.
+    "blog",
+
+    "tailwind",
+    "theme"
 ]
+
+TAILWIND_APP_NAME = "theme"
+INTERNAL_IPS = [
+    "127.0.0.1",
+]
+#este path lo hicimos para que tailwind cencuentre el node js en nuestro pc. 
+NPM_BIN_PATH = "C:/Program Files/nodejs/npm.cmd"
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -39,10 +59,11 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'core.urls'
 
+#esta es la estetica de la app
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, "templates")],#con esto le decimos de donde sacar la info. 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -55,11 +76,11 @@ TEMPLATES = [
     },
 ]
 
+
+#nuestras imagenes se pueden entender en el servidor, importante al despegar, se usa al final para que el sitio funcione. 
 WSGI_APPLICATION = 'core.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -68,10 +89,7 @@ DATABASES = {
     }
 }
 
-
-# Password validation
-# https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
-
+#validador de contraseñas, no se toca. 
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -88,9 +106,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.1/topics/i18n/
-
+#Esto sirve para que Django funcione en diferentes lenguages
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -100,12 +116,8 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
+#archivos estaticos, permite trabajar nuestras imagenes.
 STATIC_URL = 'static/'
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
